@@ -247,12 +247,15 @@ func (a *Archive) Extract(path string) (contents []string, err error) {
 		}
 
 		dirname := filepath.Join(path, filepath.Dir(name))
-		_ = os.MkdirAll(dirname, 0755)
-
-		e = os.WriteFile(filepath.Join(dirname, filepath.Base(name)), data, 0644)
-		if e != nil {
-			err = e
-			return
+		if a.EntryIsDir() {
+			_ = os.MkdirAll(filepath.Join(path, name), 0755)
+		} else {
+			_ = os.MkdirAll(dirname, 0755)
+			e = os.WriteFile(filepath.Join(dirname, filepath.Base(name)), data, 0644)
+			if e != nil {
+				err = e
+				return
+			}
 		}
 	}
 

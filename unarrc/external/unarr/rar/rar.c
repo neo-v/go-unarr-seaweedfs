@@ -65,6 +65,7 @@ static bool rar_parse_entry(ar_archive *ar, off64_t offset)
                     /*log("Skipping directory entry \"%s\"", rar_get_name(ar, false));
                     break;*/
                     ar->entry_is_dir = true;
+                    return true;
                 }
                 warn("Can't skip directory entries containing data");
             }
@@ -221,5 +222,5 @@ ar_archive *ar_open_rar_archive(ar_stream *stream)
         return NULL;
     }
 
-    return ar_open_archive(stream, sizeof(ar_archive_rar), rar_close, rar_parse_entry, rar_get_name, rar_uncompress, NULL, FILE_SIGNATURE_SIZE, NULL);
+    return ar_open_archive(stream, sizeof(ar_archive_rar), rar_close, rar_parse_entry, rar_get_name, rar_uncompress, NULL, FILE_SIGNATURE_SIZE, rar_entry_is_dir);
 }
