@@ -237,3 +237,8 @@ const char *rar_get_name(ar_archive *ar, bool raw)
     }
     return rar->entry.name;
 }
+
+bool rar_entry_is_dir(ar_archive *ar)
+{
+    return ar->entry_is_dir;
+}

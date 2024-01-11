@@ -72,6 +72,7 @@ struct ar_archive_s {
 
     ar_stream *stream;
     bool at_eof;
+    bool entry_is_dir;
     off64_t entry_offset;
     off64_t entry_offset_first;
     off64_t entry_offset_next;

@@ -124,6 +124,12 @@ static const char *_7z_get_name(ar_archive *ar, bool raw)
     return _7z->entry_name;
 }
 
+bool _7z_entry_is_dir(ar_archive *ar)
+{
+    ar_archive_7z *_7z = (ar_archive_7z *)ar;
+    return SzArEx_IsDir(&_7z->data, ar->entry_offset);
+}
+
 static bool _7z_uncompress(ar_archive *ar, void *buffer, size_t buffer_size)
 {
     ar_archive_7z *_7z = (ar_archive_7z *)ar;
@@ -163,7 +169,7 @@ ar_archive *ar_open_7z_archive(ar_stream *stream)
     if (!ar_seek(stream, 0, SEEK_SET))
         return NULL;
 
-    ar = ar_open_archive(stream, sizeof(ar_archive_7z), _7z_close, _7z_parse_entry, _7z_get_name, _7z_uncompress, NULL, 0, NULL);
+    ar = ar_open_archive(stream, sizeof(ar_archive_7z), _7z_close, _7z_parse_entry, _7z_get_name, _7z_uncompress, NULL, 0, _7z_entry_is_dir);
     if (!ar)
         return NULL;
 

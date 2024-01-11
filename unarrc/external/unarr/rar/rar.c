@@ -62,8 +62,9 @@ static bool rar_parse_entry(ar_archive *ar, off64_t offset)
                 warn("Encrypted entries will fail to uncompress");
             if ((header.flags & LHD_DIRECTORY) == LHD_DIRECTORY) {
                 if (header.datasize == 0) {
-                    log("Skipping directory entry \"%s\"", rar_get_name(ar, false));
-                    break;
+                    /*log("Skipping directory entry \"%s\"", rar_get_name(ar, false));
+                    break;*/
+                    ar->entry_is_dir = true;
                 }
                 warn("Can't skip directory entries containing data");
             }
