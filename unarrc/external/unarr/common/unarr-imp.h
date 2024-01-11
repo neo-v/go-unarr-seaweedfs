@@ -60,6 +60,7 @@ typedef bool (* ar_parse_entry_fn)(ar_archive *ar, off64_t offset);
 typedef const char *(* ar_entry_get_name_fn)(ar_archive *ar, bool raw);
 typedef bool (* ar_entry_uncompress_fn)(ar_archive *ar, void *buffer, size_t count);
 typedef size_t (* ar_get_global_comment_fn)(ar_archive *ar, void *buffer, size_t count);
+typedef bool (* ar_entry_is_dir_fn)(ar_archive *ar);
 
 struct ar_archive_s {
     ar_archive_close_fn close;
@@ -67,6 +68,7 @@ struct ar_archive_s {
     ar_entry_get_name_fn get_name;
     ar_entry_uncompress_fn uncompress;
     ar_get_global_comment_fn get_comment;
+    ar_entry_is_dir_fn is_dir;
 
     ar_stream *stream;
     bool at_eof;
@@ -79,6 +81,6 @@ struct ar_archive_s {
 
 ar_archive *ar_open_archive(ar_stream *stream, size_t struct_size, ar_archive_close_fn close, ar_parse_entry_fn parse_entry,
                             ar_entry_get_name_fn get_name, ar_entry_uncompress_fn uncompress, ar_get_global_comment_fn get_comment,
-                            off64_t first_entry_offset);
+                            off64_t first_entry_offset, ar_entry_is_dir_fn is_dir);
 
 #endif

@@ -278,3 +278,9 @@ const char *tar_get_name(ar_archive *ar, bool raw)
     }
     return tar->entry.name;
 }
+
+bool tar_entry_is_dir(ar_archive *ar)
+{
+    ar_archive_tar *tar = (ar_archive_tar *)ar;
+    return tar->entry.filetype == TYPE_DIRECTORY;
+}

@@ -5,7 +5,7 @@
 
 ar_archive *ar_open_archive(ar_stream *stream, size_t struct_size, ar_archive_close_fn close, ar_parse_entry_fn parse_entry,
                             ar_entry_get_name_fn get_name, ar_entry_uncompress_fn uncompress, ar_get_global_comment_fn get_comment,
-                            off64_t first_entry_offset)
+                            off64_t first_entry_offset, ar_entry_is_dir_fn is_dir)
 {
     ar_archive *ar = malloc(struct_size);
     if (!ar)
@@ -19,6 +19,7 @@ ar_archive *ar_open_archive(ar_stream *stream, size_t struct_size, ar_archive_cl
     ar->stream = stream;
     ar->entry_offset_first = first_entry_offset;
     ar->entry_offset_next = first_entry_offset;
+    ar->is_dir = is_dir;
     return ar;
 }
 
@@ -79,6 +80,12 @@ size_t ar_entry_get_size(ar_archive *ar)
 {
     return ar->entry_size_uncompressed;
 }
+
+bool ar_entry_is_dir(ar_archive *ar)
+{
+    return ar->is_dir(ar);
+}
+
 
 time64_t ar_entry_get_filetime(ar_archive *ar)
 {

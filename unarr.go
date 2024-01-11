@@ -183,6 +183,11 @@ func (a *Archive) Name() string {
 	return toValidName(unarrc.EntryGetName(a.archive))
 }
 
+// Name returns the name of the current entry as UTF-8 string
+func (a *Archive) EntryIsDir() bool {
+	return unarrc.EntryIsDir(a.archive)
+}
+
 // RawName returns the name of the current entry as raw string
 func (a *Archive) RawName() string {
 	return unarrc.EntryGetRawName(a.archive)

@@ -75,10 +75,10 @@ static bool _7z_parse_entry(ar_archive *ar, off64_t offset)
     _7z->entry_name = NULL;
     _7z->uncomp.initialized = false;
 
-    if (SzArEx_IsDir(&_7z->data, offset)) {
+    /*if (SzArEx_IsDir(&_7z->data, offset)) {
         log("Skipping directory entry \"%s\"", _7z_get_name(ar, false));
         return _7z_parse_entry(ar, offset + 1);
-    }
+    }*/
 
     return true;
 }
@@ -163,7 +163,7 @@ ar_archive *ar_open_7z_archive(ar_stream *stream)
     if (!ar_seek(stream, 0, SEEK_SET))
         return NULL;
 
-    ar = ar_open_archive(stream, sizeof(ar_archive_7z), _7z_close, _7z_parse_entry, _7z_get_name, _7z_uncompress, NULL, 0);
+    ar = ar_open_archive(stream, sizeof(ar_archive_7z), _7z_close, _7z_parse_entry, _7z_get_name, _7z_uncompress, NULL, 0, NULL);
     if (!ar)
         return NULL;
 

@@ -96,6 +96,8 @@ UNARR_EXPORT const char *ar_entry_get_raw_name(ar_archive *ar);
 UNARR_EXPORT off64_t ar_entry_get_offset(ar_archive *ar);
 /* returns the total size of uncompressed data of the current entry; read exactly that many bytes using ar_entry_uncompress */
 UNARR_EXPORT size_t ar_entry_get_size(ar_archive *ar);
+/* get entry type */
+UNARR_EXPORT bool ar_entry_is_dir(ar_archive *ar);
 /* returns the stored modification date of the current entry in 100ns since 1601/01/01 */
 UNARR_EXPORT time64_t ar_entry_get_filetime(ar_archive *ar);
 /* WARNING: don't manually seek in the stream between ar_parse_entry and the last corresponding ar_entry_uncompress call! */

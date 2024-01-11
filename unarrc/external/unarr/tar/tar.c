@@ -40,9 +40,10 @@ static bool tar_parse_entry(ar_archive *ar, off64_t offset)
     case TYPE_FILE_OLD:
         return true;
     case TYPE_DIRECTORY:
-        log("Skipping directory entry \"%s\"", tar_get_name(ar, false));
+        /*log("Skipping directory entry \"%s\"", tar_get_name(ar, false));
         tar->last_seen_dir = ar->entry_offset;
-        return tar_parse_entry(ar, ar->entry_offset_next);
+        return tar_parse_entry(ar, ar->entry_offset_next);*/
+        return true;
     case TYPE_PAX_GLOBAL:
         log("Skipping PAX global extended header record");
         return tar_parse_entry(ar, ar->entry_offset_next);
@@ -79,7 +80,7 @@ ar_archive *ar_open_tar_archive(ar_stream *stream)
     if (!ar_seek(stream, 0, SEEK_SET))
         return NULL;
 
-    ar = ar_open_archive(stream, sizeof(ar_archive_tar), tar_close, tar_parse_entry, tar_get_name, tar_uncompress, NULL, 0);
+    ar = ar_open_archive(stream, sizeof(ar_archive_tar), tar_close, tar_parse_entry, tar_get_name, tar_uncompress, NULL, 0, tar_entry_is_dir);
     if (!ar)
         return NULL;
 

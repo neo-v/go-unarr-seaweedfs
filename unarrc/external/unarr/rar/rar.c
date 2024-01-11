@@ -95,8 +95,9 @@ static bool rar_parse_entry(ar_archive *ar, off64_t offset)
             return true;
 
         case TYPE_NEWSUB:
-            log("Skipping newsub header @%" PRIi64, ar->entry_offset);
-            break;
+            /*log("Skipping newsub header @%" PRIi64, ar->entry_offset);
+            break;*/
+            return true;
 
         case TYPE_END_OF_ARCHIVE:
             ar->at_eof = true;
@@ -219,5 +220,5 @@ ar_archive *ar_open_rar_archive(ar_stream *stream)
         return NULL;
     }
 
-    return ar_open_archive(stream, sizeof(ar_archive_rar), rar_close, rar_parse_entry, rar_get_name, rar_uncompress, NULL, FILE_SIGNATURE_SIZE);
+    return ar_open_archive(stream, sizeof(ar_archive_rar), rar_close, rar_parse_entry, rar_get_name, rar_uncompress, NULL, FILE_SIGNATURE_SIZE, NULL);
 }

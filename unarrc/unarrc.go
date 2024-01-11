@@ -138,6 +138,14 @@ func EntryGetSize(ar *Archive) uint {
 	return v
 }
 
+// EntryGetSize .
+func EntryIsDir(ar *Archive) bool {
+	car := (*C.ar_archive)(unsafe.Pointer(ar))
+	ret := C.ar_entry_is_dir(car)
+	v := (bool)(ret)
+	return v
+}
+
 // EntryGetFiletime .
 func EntryGetFiletime(ar *Archive) int {
 	car := (*C.ar_archive)(unsafe.Pointer(ar))

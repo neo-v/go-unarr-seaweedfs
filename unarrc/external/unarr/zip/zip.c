@@ -200,7 +200,7 @@ ar_archive *ar_open_zip_archive(ar_stream *stream, bool deflatedonly)
     if (!zip_parse_end_of_central_directory(stream, &eocd))
         return NULL;
 
-    ar = ar_open_archive(stream, sizeof(ar_archive_zip), zip_close, zip_parse_entry, zip_get_name, zip_uncompress, zip_get_global_comment, eocd.dir_offset);
+    ar = ar_open_archive(stream, sizeof(ar_archive_zip), zip_close, zip_parse_entry, zip_get_name, zip_uncompress, zip_get_global_comment, eocd.dir_offset, NULL);
     if (!ar)
         return NULL;
 
