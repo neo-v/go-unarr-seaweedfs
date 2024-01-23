@@ -150,13 +150,17 @@ static bool _7z_uncompress(ar_archive *ar, void *buffer, size_t buffer_size)
     }
 
     if (buffer_size > uncomp->bytes_left) {
-        warn("Requesting too much data (%" PRIuPTR " < %" PRIuPTR ")", uncomp->bytes_left, buffer_size);
-        return false;
+        //warn("Requesting too much data (%" PRIuPTR " < %" PRIuPTR ")", uncomp->bytes_left, buffer_size);
+        buffer_size = uncomp->bytes_left;
     }
 
     memcpy(buffer, uncomp->buffer + uncomp->offset + ar->entry_size_uncompressed - uncomp->bytes_left, buffer_size);
     uncomp->bytes_left -= buffer_size;
 
+    if (uncomp->bytes_left == 0) {
+        //warn("Uncompressed sizes don't match (%" PRIuPTR " != %" PRIuPTR ")", uncomp->bytes_left, ar->entry_size_uncompressed);
+        return false;
+    }
     return true;
 }
 

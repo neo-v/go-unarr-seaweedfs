@@ -168,9 +168,10 @@ static bool rar_restart_solid(ar_archive *ar)
 static bool rar_uncompress(ar_archive *ar, void *buffer, size_t count)
 {
     ar_archive_rar *rar = (ar_archive_rar *)ar;
-    if (count > ar->entry_size_uncompressed - rar->progress.bytes_done) {
-        warn("Requesting too much data (%" PRIuPTR " < %" PRIuPTR ")", ar->entry_size_uncompressed - rar->progress.bytes_done, count);
-        return false;
+    size_t left = ar->entry_size_uncompressed - rar->progress.bytes_done;
+    if (count > left) {
+        //warn("Requesting too much data (%" PRIuPTR " < %" PRIuPTR ")", ar->entry_size_uncompressed - rar->progress.bytes_done, count);
+        count = left;
     }
     if (rar->entry.method == METHOD_STORE) {
         if (!rar_copy_stored(rar, buffer, count))
@@ -194,6 +195,10 @@ static bool rar_uncompress(ar_archive *ar, void *buffer, size_t count)
     rar->progress.crc = ar_crc32(rar->progress.crc, buffer, count);
     if (rar->progress.bytes_done < ar->entry_size_uncompressed)
         return true;
+
+    if (rar->progress.bytes_done == ar->entry_size_uncompressed)
+        return false;
+
     if (rar->progress.data_left)
         log("Compressed block has more data than required");
     rar->solid.part_done = true;

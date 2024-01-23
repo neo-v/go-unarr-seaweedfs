@@ -60,15 +60,20 @@ static bool tar_parse_entry(ar_archive *ar, off64_t offset)
 static bool tar_uncompress(ar_archive *ar, void *buffer, size_t count)
 {
     ar_archive_tar *tar = (ar_archive_tar *)ar;
-    if (count > ar->entry_size_uncompressed - tar->bytes_done) {
-        warn("Requesting too much data (%" PRIuPTR " < %" PRIuPTR ")", ar->entry_size_uncompressed - tar->bytes_done, count);
-        return false;
+
+    size_t left_size = ar->entry_size_uncompressed - tar->bytes_done;
+    if (count > left_size) {
+        //warn("Requesting too much data (%" PRIuPTR " < %" PRIuPTR ")", ar->entry_size_uncompressed - tar->bytes_done, count);
+        count = left_size;
     }
     if (ar_read(ar->stream, buffer, count) != count) {
         warn("Unexpected EOF in stored data");
         return false;
     }
     tar->bytes_done += count;
+    if (tar->bytes_done == ar->entry_size_uncompressed) {
+        return false;
+    }
     return true;
 }
 
