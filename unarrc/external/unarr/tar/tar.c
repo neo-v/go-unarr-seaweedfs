@@ -62,6 +62,7 @@ static bool tar_uncompress(ar_archive *ar, void *buffer, size_t count)
     ar_archive_tar *tar = (ar_archive_tar *)ar;
 
     size_t left_size = ar->entry_size_uncompressed - tar->bytes_done;
+    ar->entry_size_read = left_size;
     if (count > left_size) {
         //warn("Requesting too much data (%" PRIuPTR " < %" PRIuPTR ")", ar->entry_size_uncompressed - tar->bytes_done, count);
         count = left_size;

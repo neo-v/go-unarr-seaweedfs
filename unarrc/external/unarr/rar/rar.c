@@ -169,6 +169,7 @@ static bool rar_uncompress(ar_archive *ar, void *buffer, size_t count)
 {
     ar_archive_rar *rar = (ar_archive_rar *)ar;
     size_t left = ar->entry_size_uncompressed - rar->progress.bytes_done;
+    ar->entry_size_read = left;
     if (count > left) {
         //warn("Requesting too much data (%" PRIuPTR " < %" PRIuPTR ")", ar->entry_size_uncompressed - rar->progress.bytes_done, count);
         count = left;

@@ -155,6 +155,7 @@ static bool _7z_uncompress(ar_archive *ar, void *buffer, size_t buffer_size)
     }
 
     memcpy(buffer, uncomp->buffer + uncomp->offset + ar->entry_size_uncompressed - uncomp->bytes_left, buffer_size);
+    ar->entry_size_read = uncomp->bytes_left;
     uncomp->bytes_left -= buffer_size;
 
     if (uncomp->bytes_left == 0) {

@@ -141,6 +141,10 @@ func (a *Archive) Read(b []byte) (n int, err error) {
 	r := unarrc.EntryUncompress(a.archive, unsafe.Pointer(&b[0]), uint(len(b)))
 
 	n = len(b)
+	left_size := a.EntryLeftSize()
+	if left_size < n {
+		n = left_size
+	}
 	if !r || n == 0 {
 		err = io.EOF
 	}
@@ -183,9 +187,14 @@ func (a *Archive) Name() string {
 	return toValidName(unarrc.EntryGetName(a.archive))
 }
 
-// Name returns the name of the current entry as UTF-8 string
+// return entry type
 func (a *Archive) EntryIsDir() bool {
 	return unarrc.EntryIsDir(a.archive)
+}
+
+// left size for an entry
+func (a *Archive) EntryLeftSize() int {
+	return int(unarrc.EntryLeftSize(a.archive))
 }
 
 // RawName returns the name of the current entry as raw string

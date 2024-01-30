@@ -81,6 +81,11 @@ size_t ar_entry_get_size(ar_archive *ar)
     return ar->entry_size_uncompressed;
 }
 
+size_t ar_entry_read_size(ar_archive *ar)
+{
+    return ar->entry_size_read;
+}
+
 bool ar_entry_is_dir(ar_archive *ar)
 {
     return ar->is_dir(ar);

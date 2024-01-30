@@ -77,6 +77,7 @@ struct ar_archive_s {
     off64_t entry_offset_first;
     off64_t entry_offset_next;
     size_t entry_size_uncompressed;
+    size_t entry_size_read;
     time64_t entry_filetime;
 };
 
