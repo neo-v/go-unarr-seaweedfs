@@ -182,8 +182,8 @@ ar_archive *ar_open_7z_archive(ar_stream *stream)
     CSeekStream_CreateVTable(&_7z->in_stream, stream);
     LookToRead2_CreateVTable(&_7z->look_stream, False);
     _7z->look_stream.realStream = &_7z->in_stream.super;
-    _7z->look_stream.buf = ISzAlloc_Alloc(&gSzAlloc, 1 << 18);
-    _7z->look_stream.bufSize = 1 << 18;
+    _7z->look_stream.buf = ISzAlloc_Alloc(&gSzAlloc, 1 << 27);
+    _7z->look_stream.bufSize = 1 << 27;
     LookToRead2_INIT(&_7z->look_stream);
 
 

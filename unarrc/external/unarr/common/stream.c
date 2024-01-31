@@ -66,7 +66,7 @@ static bool file_seek(void *data, off64_t offset, int origin)
     if (sizeof(off_t) == 8)
         return fseeko(data, offset, origin) == 0;
 #endif
-    if (offset > INT32_MAX || offset < INT32_MIN)
+    if (offset > INT64_MAX || offset < INT32_MIN)
         return false;
     return fseek(data, (long)offset, origin) == 0;
 #endif

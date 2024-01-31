@@ -237,7 +237,7 @@ static SRes SzDecodeLzma2(const Byte *props, unsigned propsSize, UInt64 inSize, 
   for (;;)
   {
     const void *inBuf = NULL;
-    size_t lookahead = (1 << 18);
+    size_t lookahead = (1 << 27);
     if (lookahead > inSize)
       lookahead = (size_t)inSize;
     res = ILookInStream_Look(inStream, &inBuf, &lookahead);
@@ -337,8 +337,8 @@ static SRes CheckSupportedFolder(const CSzFolder *f)
       return SZ_ERROR_UNSUPPORTED;
     return SZ_OK;
   }
-  
-  
+
+
   #if defined(Z7_USE_BRANCH_FILTER)
 
   if (f->NumCoders == 2)
@@ -378,7 +378,7 @@ static SRes CheckSupportedFolder(const CSzFolder *f)
 
   #endif
 
-  
+
   if (f->NumCoders == 4)
   {
     if (!IS_SUPPORTED_CODER(&f->Coders[1])
@@ -397,7 +397,7 @@ static SRes CheckSupportedFolder(const CSzFolder *f)
       return SZ_ERROR_UNSUPPORTED;
     return SZ_OK;
   }
-  
+
   return SZ_ERROR_UNSUPPORTED;
 }
 
@@ -492,17 +492,17 @@ static SRes SzFolder_Decode2(const CSzFolder *folder,
     {
       const UInt64 offset = packPositions[1];
       const UInt64 s3Size = packPositions[2] - offset;
-      
+
       if (ci != 3)
         return SZ_ERROR_UNSUPPORTED;
-      
+
       tempSizes[2] = (SizeT)s3Size;
       if (tempSizes[2] != s3Size)
         return SZ_ERROR_MEM;
       tempBuf[2] = (Byte *)ISzAlloc_Alloc(allocMain, tempSizes[2]);
       if (!tempBuf[2] && tempSizes[2] != 0)
         return SZ_ERROR_MEM;
-      
+
       RINOK(LookInStream_SeekTo(inStream, startPos + offset))
       RINOK(SzDecodeCopy(s3Size, inStream, tempBuf[2]))
 
@@ -513,15 +513,15 @@ static SRes SzFolder_Decode2(const CSzFolder *folder,
 
       {
         CBcj2Dec p;
-        
+
         p.bufs[0] = tempBuf3;   p.lims[0] = tempBuf3 + tempSize3;
         p.bufs[1] = tempBuf[0]; p.lims[1] = tempBuf[0] + tempSizes[0];
         p.bufs[2] = tempBuf[1]; p.lims[2] = tempBuf[1] + tempSizes[1];
         p.bufs[3] = tempBuf[2]; p.lims[3] = tempBuf[2] + tempSizes[2];
-        
+
         p.dest = outBuffer;
         p.destLim = outBuffer + outSize;
-        
+
         Bcj2Dec_Init(&p);
         RINOK(Bcj2Dec_Decode(&p))
 
@@ -551,7 +551,7 @@ static SRes SzFolder_Decode2(const CSzFolder *folder,
         continue;
       }
      #endif
-     
+
      #ifdef Z7_USE_FILTER_ARM64
       if (coder->MethodID == k_ARM64)
       {
@@ -564,7 +564,7 @@ static SRes SzFolder_Decode2(const CSzFolder *folder,
         continue;
       }
      #endif
-     
+
      #if !defined(Z7_NO_METHODS_FILTERS) || defined(Z7_USE_FILTER_ARMT)
       {
         if (coder->PropsSize != 0)
@@ -611,13 +611,13 @@ SRes SzAr_DecodeFolder(const CSzAr *p, UInt32 folderIndex,
   SRes res;
   CSzFolder folder;
   CSzData sd;
-  
+
   const Byte *data = p->CodersData + p->FoCodersOffsets[folderIndex];
   sd.Data = data;
   sd.Size = p->FoCodersOffsets[(size_t)folderIndex + 1] - p->FoCodersOffsets[folderIndex];
-  
+
   res = SzGetNextFolderItem(&folder, &sd);
-  
+
   if (res != SZ_OK)
     return res;
 
@@ -634,7 +634,7 @@ SRes SzAr_DecodeFolder(const CSzAr *p, UInt32 folderIndex,
         p->PackPositions + p->FoStartPackStreamIndex[folderIndex],
         inStream, startPos,
         outBuffer, (SizeT)outSize, allocMain, tempBuf);
-    
+
     for (i = 0; i < 3; i++)
       ISzAlloc_Free(allocMain, tempBuf[i]);
 
