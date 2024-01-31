@@ -97,9 +97,9 @@ static bool rar_parse_entry(ar_archive *ar, off64_t offset)
             return true;
 
         case TYPE_NEWSUB:
-            /*log("Skipping newsub header @%" PRIi64, ar->entry_offset);
-            break;*/
-            return true;
+            log("Skipping newsub header @%" PRIi64, ar->entry_offset);
+            break;
+            //return true;
 
         case TYPE_END_OF_ARCHIVE:
             ar->at_eof = true;
