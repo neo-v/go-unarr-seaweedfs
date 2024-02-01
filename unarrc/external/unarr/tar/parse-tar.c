@@ -192,7 +192,7 @@ bool tar_handle_gnu_longname(ar_archive *ar)
         free(longname);
         return ar_parse_entry(ar);
     }
-    if (!ar_entry_uncompress(ar, longname, size) || !ar_parse_entry(ar)) {
+    if (ar_entry_uncompress(ar, longname, size) || !ar_parse_entry(ar)) {
         free(longname);
         return false;
     }
