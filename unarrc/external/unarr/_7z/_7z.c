@@ -139,6 +139,9 @@ static bool _7z_uncompress(ar_archive *ar, void *buffer, size_t buffer_size)
         /* TODO: this uncompresses all data for solid compressions */
         SRes res = SzArEx_Extract(&_7z->data, &_7z->look_stream.vt, (UInt32)ar->entry_offset, &uncomp->folder_index, &uncomp->buffer, &uncomp->buffer_size, &uncomp->offset, &uncomp->bytes_left, &gSzAlloc, &gSzAlloc);
         if (res != SZ_OK) {
+            if (res == SZ_ERROR_MEM) {
+                warn("Failed to alloc mem, size:(%" PRIuPTR ")", uncomp->buffer_size);
+            }
             warn("Failed to extract file at index %" PRIi64 " (failed with error %d)", ar->entry_offset, res);
             return false;
         }
