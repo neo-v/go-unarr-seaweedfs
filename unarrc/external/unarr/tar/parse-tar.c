@@ -124,7 +124,7 @@ bool tar_handle_pax_extended(ar_archive *ar)
         log("Ignoring PAX extended header on OOM");
         return ar_parse_entry(ar);
     }
-    if (!ar_entry_uncompress(ar, data, size) || !ar_parse_entry(ar)) {
+    if (ar_entry_uncompress(ar, data, size) || !ar_parse_entry(ar)) {
         free(data);
         return false;
     }
