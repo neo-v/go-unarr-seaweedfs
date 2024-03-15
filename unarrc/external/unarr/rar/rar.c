@@ -34,6 +34,7 @@ static bool rar_parse_entry(ar_archive *ar, off64_t offset)
             warn("Integer overflow due to overly large data size");
             return false;
         }
+        ar->entry_is_dir = false;
 
         switch (header.type) {
         case TYPE_MAIN_HEADER:
