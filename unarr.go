@@ -78,9 +78,9 @@ func NewArchiveFromReader(r io.Reader) (a *Archive, err error) {
 // open opens archive
 func (a *Archive) open() (err error) {
 	a.archive = unarrc.OpenRarArchive(a.stream)
-	if a.archive == nil {
+	/*if a.archive == nil {
 		a.archive = unarrc.OpenZipArchive(a.stream, false)
-	}
+	}*/
 	if a.archive == nil {
 		a.archive = unarrc.Open7zArchive(a.stream)
 	}
