@@ -7,6 +7,11 @@ static bool tar_is_number(const char *data, size_t size)
 {
     size_t i;
 
+    /* support GNU Extensions to the Archive Format */
+    if ((unsigned char) (data[0]) == 0x80) {
+        return true;
+    }
+
     for (i = 0; i < size; i++) {
         if ((data[i] < '0' || '7' < data[i]) && data[i] != ' ' && data[i] != '\0')
             return false;
@@ -19,6 +24,19 @@ static uint64_t tar_parse_number(const char *data, size_t size)
 {
     uint64_t value = 0;
     size_t i;
+    unsigned char tmpHigh, tmpLow;
+
+    /* support GNU Extensions to the Archive Format */
+    if ((unsigned char) (data[0]) == 0x80) {
+        for (i = 1; i < size; i++) {
+             tmpHigh = (unsigned char) (data[i] & 0xf0) >> 4;
+             tmpLow = (unsigned char) (data[i] & 0x0f);
+             value = value * 16 + tmpHigh;
+             value = value * 16 + tmpLow;
+        }
+        return value;
+    }
+
 
     for (i = 0; i < size; i++) {
         if (data[i] == ' ' || data[i] == '\0')
